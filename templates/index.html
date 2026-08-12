@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Multi-Tier Cloud App</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; background-color: #f4f6f9; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        h2 { color: #1a365d; }
+        input[type="text"] { width: 70%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 10px 15px; background-color: #2b6cb0; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #2c5282; }
+        ul { list-style-type: none; padding: 0; margin-top: 20px; }
+        li { padding: 8px; background: #edf2f7; margin-bottom: 5px; border-radius: 4px; display: flex; justify-content: space-between; }
+        .badge { background: #319795; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Secure Cloud App <span class="badge">Multi-Tier</span></h2>
+        <p>This frontend talks to the Backend API in the private cloud subnet.</p>
+        
+        <div>
+            <input type="text" id="username" placeholder="Enter a name..." />
+            <button onclick="submitUser()">Submit to Cloud DB</button>
+        </div>
+
+        <h3>Database Records:</h3>
+        <ul id="userList">
+            <li>Loading records from database...</li>
+        </ul>
+    </div>
+
+    <script>
+        // Fetch users from Backend API on page load
+        async function fetchUsers() {
+            try {
+                const res = await fetch('/api/users');
+                const result = await res.json();
+                const list = document.getElementById('userList');
+                list.innerHTML = '';
+
+                if (result.data.length === 0) {
+                    list.innerHTML = '<li>No records in database yet.</li>';
+                    return;
+                }
+
+                result.data.forEach(user => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span><strong>${user.name}</strong></span> <small>${user.created_at}</small>`;
+                    list.appendChild(li);
+                });
+            } catch (err) {
+                console.error("API Fetch Error:", err);
+            }
+        }
+
+        // Send a new name to Backend API
+        async function submitUser() {
+            const input = document.getElementById('username');
+            const name = input.value.trim();
+            if (!name) return alert('Please enter a name');
+
+            try {
+                const res = await fetch('/api/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name })
+                });
+
+                if (res.ok) {
+                    input.value = '';
+                    fetchUsers(); // Refresh list
+                }
+            } catch (err) {
+                console.error("API Post Error:", err);
+            }
+        }
+
+        // Run on load
+        fetchUsers();
+    </script>
+</body>
+</html>
