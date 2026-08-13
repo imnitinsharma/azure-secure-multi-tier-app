@@ -6,7 +6,7 @@ This directory contains visual proof of deployment, configuration, and end-to-en
 
 ## 🗺️ Architecture Overview
 
-*(Note: Architecture diagram screenshot `01-azure-architecture.png` will be uploaded here upon completion).*
+![Azure Multi-Tier Architecture](01-azure-architecture.png)
 
 ---
 
