@@ -64,7 +64,7 @@ This project was built as my first hands-on Cloud Security project.
                  ┌────────────────────┐
                  │   DATABASE TIER    │
                  │                    │
-                 │       MySQL        │
+                 │       SQLite        │
                  │                    │
                  │    10.0.3.x        │
                  │                    │
