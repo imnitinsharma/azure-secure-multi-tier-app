@@ -1,0 +1,17 @@
+# Local Terraform working directories & provider binaries
+**/.terraform/
+**/.terraform.lock.hcl
+
+# Terraform state files (contains plain-text secrets and internal IP mappings)
+**/*.tfstate
+**/*.tfstate.*
+**/*.tfstate.backup
+
+# Sensitive environment variable / secret files
+*.env
+*.tfvars
+*.tfvars.json
+
+# System & OS temporary files
+.DS_Store
+Thumbs.db
