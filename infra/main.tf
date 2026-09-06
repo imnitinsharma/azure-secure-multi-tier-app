@@ -64,7 +64,7 @@ resource "azurerm_subnet_network_security_group_association" "backend_assoc" {
   network_security_group_id = azurerm_network_security_group.nsg_backend.id
 }
 
-# 4. App Service Plan & Web App
+# 4. App Service Plan & Web App (Host for your Docker Container)
 resource "azurerm_service_plan" "asp" {
   name                = "asp-devsecops"
   resource_group_name = azurerm_resource_group.rg.name
@@ -74,7 +74,7 @@ resource "azurerm_service_plan" "asp" {
 }
 
 resource "azurerm_linux_web_app" "app" {
-  name                = "app-devsecops-nitin-lab01"
+  name                = "app-devsecops-nitin-01" # Must be globally unique
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   service_plan_id     = azurerm_service_plan.asp.id

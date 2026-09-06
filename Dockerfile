@@ -1,26 +1,31 @@
-# Stage 1: Build dependencies in a virtualenv
+# Stage 1: Build dependencies
 FROM python:3.11 AS builder
-
 WORKDIR /build
-
 COPY requirements.txt .
-
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 RUN pip install --no-cache-dir -r requirements.txt
 
-
-# Stage 2: Minimal runtime image
+# Stage 2: Minimal non-root runtime
 FROM python:3.11-slim
-
 WORKDIR /app
 
-# Copy virtual environment from builder
+# Create dedicated non-root user (UID 10001)
+RUN groupadd -g 10001 appgroup && \
+    useradd -u 10001 -g appgroup -s /bin/sh appuser
+
 COPY --from=builder /opt/venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-COPY . .
+COPY --chown=appuser:appgroup . .
+
+# Switch context to non-root user
+USER 10001
 
 EXPOSE 8000
+
+# Container health probe
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+  CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/users')" || exit 1
 
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
