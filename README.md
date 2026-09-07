@@ -41,6 +41,8 @@ This project demonstrates practical competency in modern secure software develop
 [ Azure Key Vault ] ──(Enforces Least-Privilege Access Policy -> Returns Secret)
 
 
+'''text
+
 markdown_content = """# Project Structure & Component Breakdown
 
 * **`app.py`**: The core FastAPI backend. It utilizes Python's `azure-identity` and `azure-keyvault-secrets` libraries to authenticate securely via Managed Identity and fetch runtime secrets, featuring a robust fallback error-handling pattern for high availability.
