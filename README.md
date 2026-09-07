@@ -41,9 +41,7 @@ This project demonstrates practical competency in modern secure software develop
 [ Azure Key Vault ] ──(Enforces Least-Privilege Access Policy -> Returns Secret)
 
 
-'''text
-
-markdown_content = """# Project Structure & Component Breakdown
+# Project Structure & Component Breakdown
 
 * **`app.py`**: The core FastAPI backend. It utilizes Python's `azure-identity` and `azure-keyvault-secrets` libraries to authenticate securely via Managed Identity and fetch runtime secrets, featuring a robust fallback error-handling pattern for high availability.
 * **`Dockerfile`**: Defines the immutable container runtime environment, packaging FastAPI and its dependencies securely for cloud execution.
@@ -70,9 +68,3 @@ Configured secure pipeline credentials and verified successful workflow executio
 
 ### 3. Live Application & Secure Secret Verification
 FastAPI documentation endpoint deployed live on Azure App Service, returning a successful passwordless vault verification response.
-"""
-
-with open("project_summary.md", "w", encoding="utf-8") as f:
-    f.write(markdown_content)
-
-print("Markdown file created successfully.")
