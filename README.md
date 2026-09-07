@@ -23,24 +23,6 @@ This project demonstrates practical competency in modern secure software develop
 
 ---
 
-## Architecture & Security Workflow
-
-```text
-[ Git / Developer ] 
-       │
-       ▼ (CI/CD Pipeline via GitHub Actions .yml)
-[ Trivy Scanner ] ──(Scans Docker image for CVEs & vulnerabilities)
-       │
-       ▼
-[ Docker Hub / ACR ] ──(Immutable Container Image)
-       │
-       ▼
-[ Azure App Service ] ──(Authenticates via Microsoft Entra ID Managed Identity)
-       │
-       ▼
-[ Azure Key Vault ] ──(Enforces Least-Privilege Access Policy -> Returns Secret)
-
-
 # Project Structure & Component Breakdown
 
 * **`app.py`**: The core FastAPI backend. It utilizes Python's `azure-identity` and `azure-keyvault-secrets` libraries to authenticate securely via Managed Identity and fetch runtime secrets, featuring a robust fallback error-handling pattern for high availability.
@@ -68,3 +50,23 @@ Configured secure pipeline credentials and verified successful workflow executio
 
 ### 3. Live Application & Secure Secret Verification
 FastAPI documentation endpoint deployed live on Azure App Service, returning a successful passwordless vault verification response.
+
+
+## Architecture & Security Workflow
+
+```text
+[ Git / Developer ] 
+       │
+       ▼ (CI/CD Pipeline via GitHub Actions .yml)
+[ Trivy Scanner ] ──(Scans Docker image for CVEs & vulnerabilities)
+       │
+       ▼
+[ Docker Hub / ACR ] ──(Immutable Container Image)
+       │
+       ▼
+[ Azure App Service ] ──(Authenticates via Microsoft Entra ID Managed Identity)
+       │
+       ▼
+[ Azure Key Vault ] ──(Enforces Least-Privilege Access Policy -> Returns Secret)
+
+
