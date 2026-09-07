@@ -1,72 +1,41 @@
-# Secure Multi-Tier Web Application on Azure
+# Secure Multi-Tier Cloud Application & DevSecOps Pipeline
 
-A hands-on cloud security project demonstrating how to deploy a three-tier web application on Microsoft Azure using network segmentation, private communication, Network Security Groups (NSGs), least privilege and defense-in-depth principles.
+An enterprise-aligned, secure-by-design multi-tier cloud application built with **FastAPI**, containerized via **Docker**, provisioned using **Infrastructure as Code (Terraform)**, and protected via zero-trust cloud security principles and automated DevSecOps pipelines. 
 
-The project consists of a public Web tier, a private Backend/Application tier and a private Database tier.
-
----
-
-## Project Overview
-
-The objective of this project was not simply to deploy a web application to Azure.
-
-The main goal was to understand how cloud networking and security controls can be used to:
-
-- Reduce the application's attack surface
-- Separate Internet-facing and internal resources
-- Restrict inbound network access
-- Apply least-privilege principles
-- Keep backend and database resources private
-- Control communication between application tiers
-- Understand how network architecture affects potential attack paths
-
-This project was built as my first hands-on Cloud Security project.
+This project demonstrates practical competency in modern secure software development lifecycle (SSDLC) standards, cloud architecture, and security automation:
+* **Least Privilege (PoLP)**: Restricting runtime access boundaries so application identities only hold explicit required permissions (`get`, `list`) via Microsoft Entra ID.
+* **Defense-in-Depth**: Multi-layered security covering container vulnerability scanning, infrastructure-as-code automation, and cloud-native secret isolation.
+* **Identity Federation**: Completely eliminating hardcoded credentials using token-based authentication (`DefaultAzureCredential`).
 
 ---
 
-# Architecture
+## Tech Stack & Core Libraries
+
+| Domain | Technology / Tool | Purpose in Project |
+| :--- | :--- | :--- |
+| **Backend Framework** | Python, FastAPI, Uvicorn | High-performance asynchronous API engine |
+| **Azure Python SDKs** | `azure-identity`, `azure-keyvault-secrets` | Programmatic secure token management and Key Vault integration |
+| **Infrastructure (IaC)** | Terraform, Azure CLI | Automated, version-controlled cloud resource lifecycle management |
+| **Containerization** | Docker | Immutable application packaging and runtime isolation |
+| **Security Scanning** | Trivy (Open Source) | Automated static vulnerability and dependency scanning for container images |
+| **Cloud & IAM** | Microsoft Azure, Entra ID | Enterprise hosting, system-assigned managed identities, and Key Vault |
+| **CI/CD Automation** | GitHub Actions (`.yml`) | Automated build, security scan, and deploy pipelines |
+
+---
+
+## Architecture & Security Workflow
 
 ```text
-                         INTERNET
-                            │
-                            │
-                       HTTPS / 443
-                            │
-                            ▼
-                 ┌────────────────────┐
-                 │      WEB TIER      │
-                 │                    │
-                 │   Azure Linux VM   │
-                 │      Nginx         │
-                 │                    │
-                 │    10.0.1.x        │
-                 │                    │
-                 │  Public Subnet     │
-                 └─────────┬──────────┘
-                           │
-                           │ TCP / 5000
-                           │ Private Network
-                           ▼
-                 ┌────────────────────┐
-                 │  BACKEND TIER      │
-                 │                    │
-                 │   Azure Linux VM   │
-                 │ Flask + Gunicorn   │
-                 │                    │
-                 │    10.0.2.x        │
-                 │                    │
-                 │  Private Subnet     │
-                 └─────────┬──────────┘
-                           │
-                           │ TCP / 3306
-                           │ Private Network
-                           ▼
-                 ┌────────────────────┐
-                 │   DATABASE TIER    │
-                 │                    │
-                 │       SQLite        │
-                 │                    │
-                 │    10.0.3.x        │
-                 │                    │
-                 │  Private Subnet    │
-                 └────────────────────┘
+[ Git / Developer ] 
+       │
+       ▼ (CI/CD Pipeline via GitHub Actions .yml)
+[ Trivy Scanner ] ──(Scans Docker image for CVEs & vulnerabilities)
+       │
+       ▼
+[ Docker Hub / ACR ] ──(Immutable Container Image)
+       │
+       ▼
+[ Azure App Service ] ──(Authenticates via Microsoft Entra ID Managed Identity)
+       │
+       ▼
+[ Azure Key Vault ] ──(Enforces Least-Privilege Access Policy -> Returns Secret)
