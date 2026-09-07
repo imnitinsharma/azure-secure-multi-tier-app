@@ -7,6 +7,14 @@ app = FastAPI(title="Secure Azure Multi-Tier Backend")
 
 KEY_VAULT_NAME = os.environ.get("KEY_VAULT_NAME")
 
+@app.get("/")
+def read_root():
+    return {"status": "online", "docs": "/docs"}
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
+
 @app.get("/api/vault-check")
 def check_vault_secret():
     if not KEY_VAULT_NAME:
@@ -19,4 +27,4 @@ def check_vault_secret():
 
     # Retrieve a secret dynamically
     secret = client.get_secret("db-connection-string")
-    return {"status": "success", "secret_retrieved": True}
+    return {"status": "success", "secret_retrieved": True}  
