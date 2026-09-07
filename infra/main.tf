@@ -64,7 +64,16 @@ resource "azurerm_subnet_network_security_group_association" "backend_assoc" {
   network_security_group_id = azurerm_network_security_group.nsg_backend.id
 }
 
-# 4. App Service Plan & Web App (Host for your Docker Container)
+# 4. Azure Container Registry (CRITICAL for Docker image storage)
+resource "azurerm_container_registry" "acr" {
+  name                = "acrdevsecopsnitin01" # Must be globally unique, alphanumeric only
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  sku                 = "Basic"
+  admin_enabled       = true
+}
+
+# 5. App Service Plan & Web App (Host for your Docker Container)
 resource "azurerm_service_plan" "asp" {
   name                = "asp-devsecops"
   resource_group_name = azurerm_resource_group.rg.name
@@ -90,4 +99,8 @@ resource "azurerm_linux_web_app" "app" {
 
 output "web_app_name" {
   value = azurerm_linux_web_app.app.name
+}
+
+output "acr_registry_name" {
+  value = azurerm_container_registry.acr.name
 }

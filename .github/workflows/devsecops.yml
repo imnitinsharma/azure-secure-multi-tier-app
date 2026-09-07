@@ -29,13 +29,13 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t app-backend:v1 .
+          docker build -t fastapi-app:v1 .
 
       # Gate 2: Container Image Vulnerability Scan
       - name: Scan Docker Image with Trivy
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'app-backend:v1'
+          image-ref: 'fastapi-app:v1'
           format: 'table'
           severity: 'CRITICAL,HIGH'
 
@@ -58,14 +58,14 @@ jobs:
       # Step 3: Tag and Push Docker Image to ACR
       - name: Push Image to ACR
         run: |
-          docker tag app-backend:v1 ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/app-backend:${{ github.sha }}
-          docker tag app-backend:v1 ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/app-backend:latest
-          docker push ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/app-backend:${{ github.sha }}
-          docker push ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/app-backend:latest
+          docker tag fastapi-app:v1 ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/fastapi-app:${{ github.sha }}
+          docker tag fastapi-app:v1 ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/fastapi-app:latest
+          docker push ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/fastapi-app:${{ github.sha }}
+          docker push ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/fastapi-app:latest
 
       # Step 4: Deploy Container to Azure App Service
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
-          images: ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/app-backend:${{ github.sha }}
+          images: ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/fastapi-app:${{ github.sha }}
